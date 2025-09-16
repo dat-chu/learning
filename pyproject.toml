@@ -13,5 +13,6 @@ dependencies = [
     "botocore>=1.40.30",
     "asyncpg>=0.30.0",
     "alembic",
-    "psycopg2-binary==2.9.10"
+    "psycopg2-binary==2.9.10",
+    "passlib"
 ]

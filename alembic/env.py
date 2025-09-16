@@ -5,7 +5,7 @@ from sqlalchemy import pool
 
 from alembic import context
 from src.db.base import Base
-from src.models.index import User, Course, Lesson, Enrollment, Progress
+from src.repository.implementations.PostgreSQL.models.index import User, Course, Lesson, Enrollment, Progress
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

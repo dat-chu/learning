@@ -6,7 +6,7 @@ from src.db.base import Base
 class User(Base):
     __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     username = Column(String(50), unique=True, nullable=False, index=True)
     password_hash = Column(String(100), nullable=False)
     role = Column(String(50), default="user")
@@ -20,7 +20,7 @@ class User(Base):
 class Course(Base):
     __tablename__ = "courses"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     title = Column(String(200), nullable=False)
     description = Column(Text)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
@@ -33,7 +33,7 @@ class Course(Base):
 class Lesson(Base):
     __tablename__ = "lessons"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     course_id = Column(Integer, ForeignKey("courses.id", ondelete="CASCADE"), nullable=False)
     title = Column(String(200), nullable=False)
     content = Column(Text)
@@ -48,7 +48,7 @@ class Lesson(Base):
 class Enrollment(Base):
     __tablename__ = "enrollments"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     course_id = Column(Integer, ForeignKey("courses.id", ondelete="CASCADE"), nullable=False)
     enrolled_at = Column(DateTime(timezone=True), server_default=func.now())
@@ -61,7 +61,7 @@ class Enrollment(Base):
 class Progress(Base):
     __tablename__ = "progress"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     lesson_id = Column(Integer, ForeignKey("lessons.id", ondelete="CASCADE"), nullable=False)
     completed = Column(Boolean, default=False)

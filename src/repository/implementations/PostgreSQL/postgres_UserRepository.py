@@ -2,6 +2,8 @@ from src.exceptions import BaseAppException, ResourceNotFoundException
 from src.repository.interfaces import interface_UserRepository
 from src.schemas import UserSchemas
 import logging
+from sqlalchemy.future import select
+from src.repository.implementations.PostgreSQL.models.index import User
 
 logger = logging.getLogger(__name__)
 
@@ -12,20 +14,21 @@ class UserRepository(interface_UserRepository.UserRepository):
 
     async def get_user(
         self,
-        email: str,
+        username: str,
     ) -> UserSchemas.User:
-        # Dummy logging - log method was called
-        logger.info("PostgreSQL get_user method called")
-
         try:
-            # Dummy exception
-            if email == "nonexistent@example.com":
-                logger.warning(f"User with email {email} not found")
-                raise ResourceNotFoundException(f"User with email {email} not found")
+            result = await self.db.execute(select(User).where(User.username == username))
+            user = result.scalars().first() 
+            if user is None:
+                logger.warning(f"User with {username} not found")
+                raise ResourceNotFoundException(f"User with {username} not found")
 
             return UserSchemas.User(
-                email=email,
-                is_active=True
+                id=user.id,
+                username=user.username,
+                password_hash=user.password_hash,
+                role=user.role,
+                created_at=user.created_at,
             )
 
         # Catch the ResourceNotFoundException and raise to other layers
@@ -44,10 +47,7 @@ class UserRepository(interface_UserRepository.UserRepository):
         User_instance: UserSchemas.User
     ) -> UserSchemas.User:
 
-        return UserSchemas.User(
-            email=User_instance.email,
-            is_active=True if User_instance.is_active else False
-        )
+        pass
 
 
     async def update_user(
@@ -55,7 +55,4 @@ class UserRepository(interface_UserRepository.UserRepository):
         User_instance: UserSchemas.User
     ) -> UserSchemas.User:
 
-        return UserSchemas.User(
-            email=User_instance.email,
-            is_active=User_instance.is_active
-        )
+        pass

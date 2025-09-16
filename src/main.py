@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .routes import UserController
+from .routes import UserController, AuthController
 from .exceptions import BaseAppException
 import logging
 from src.logging_config import setup_logging
@@ -67,3 +67,4 @@ async def app_exception_handler(request, exc):
 
 
 app.include_router(UserController.router)
+app.include_router(AuthController.router)

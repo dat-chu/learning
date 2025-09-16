@@ -10,12 +10,14 @@ class UserService:
     def __init__(self, user_repository: UserRepositoryInterface):
         self.user_repository = user_repository
 
-    async def get_user(self, email: str) -> UserSchemas.UserResponse:
+    async def get_user(self, username: str) -> UserSchemas.UserResponse:
         try:
-            user = await self.user_repository.get_user(email)
+            user = await self.user_repository.get_user(username)
             return UserSchemas.UserResponse(
-                email=user.email,
-                is_active=user.is_active
+                id=user.id,
+                username=user.username,
+                role=user.role,
+                created_at=user.created_at
             )
         except ResourceNotFoundException:
             raise #Re-raise from repository layer
@@ -28,12 +30,4 @@ class UserService:
         email: str
     ) -> UserSchemas.UserResponse:
 
-        user = await self.user_repository.create_user(
-            User_instance = UserSchemas.User(
-                email=email
-            )
-        )
-        return UserSchemas.UserResponse(
-            email=user.email,
-            is_active=user.is_active
-        )
+        pass

@@ -1,22 +1,17 @@
-from pydantic import BaseModel, model_validator
-from typing_extensions import Self
+from datetime import datetime
 from typing import Optional
+from pydantic import BaseModel
 
-class ResetPassword(BaseModel):
-    password: str
-    password_repeat: str
-
-    @model_validator(mode='after')
-    def check_passwords_match(self) -> Self:
-        if self.password != self.password_repeat:
-            raise ValueError('Passwords do not match')
-        return self
 
 class User(BaseModel):
-    email: str
-    hashed_password: Optional[str] = None
-    is_active: Optional[bool] = None
+    id: Optional[int]
+    username: str
+    password_hash: str
+    role: str = None
+    created_at: datetime
 
 class UserResponse(BaseModel):
-    email: str
-    is_active: bool
+    id: int
+    username: str
+    role: str = None
+    created_at: datetime
