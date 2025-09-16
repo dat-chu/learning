@@ -1,18 +1,18 @@
 from src.exceptions import BaseAppException, ResourceNotFoundException
-from src.repository.interfaces.interface_Repository import Repository as RepositoryInterface
+from src.repository.interfaces.interface_UserRepository import UserRepository as UserRepositoryInterface
 from src.schemas import UserSchemas
 import logging
 
 logger = logging.getLogger(__name__)
 
-class Service:
+class UserService:
 
-    def __init__(self, repository: RepositoryInterface):
-        self.repository = repository
+    def __init__(self, user_repository: UserRepositoryInterface):
+        self.user_repository = user_repository
 
     async def get_user(self, email: str) -> UserSchemas.UserResponse:
         try:
-            user = await self.repository.get_user(email)
+            user = await self.user_repository.get_user(email)
             return UserSchemas.UserResponse(
                 email=user.email,
                 is_active=user.is_active
@@ -28,7 +28,7 @@ class Service:
         email: str
     ) -> UserSchemas.UserResponse:
 
-        user = await self.repository.create_user(
+        user = await self.user_repository.create_user(
             User_instance = UserSchemas.User(
                 email=email
             )

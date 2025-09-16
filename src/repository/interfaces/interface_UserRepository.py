@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from src.schemas import UserSchemas
 
-class Repository(ABC):
+class UserRepository(ABC):
 
     @abstractmethod
     async def get_user(self, email: str) -> UserSchemas.User:

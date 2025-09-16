@@ -1,11 +1,11 @@
 from src.exceptions import BaseAppException, ResourceNotFoundException
-from src.repository.interfaces import interface_Repository
+from src.repository.interfaces import interface_UserRepository
 from src.schemas import UserSchemas
 import logging
 
 logger = logging.getLogger(__name__)
 
-class Repository(interface_Repository.Repository):
+class UserRepository(interface_UserRepository.UserRepository):
 
     def __init__(self, db = None):
         self.db = db
