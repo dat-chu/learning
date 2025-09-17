@@ -1,5 +1,5 @@
 import logging
-from src.repository.interfaces.interface_CourseReposiroty import CourseRepository as CourseRepositoryInterface
+from src.repository.interfaces.interface_CourseRepository import CourseRepository as CourseRepositoryInterface
 from src.schemas import CourseSchemas
 
 logger = logging.getLogger(__name__)
