@@ -17,7 +17,7 @@ class AuthRepository(AuthRepositoryInterface):
     def __init__(self, db = None):
         self.db = db
 
-    async def signup(self, user_instance: AuthSchemas.UserSignupRequest) -> str:
+    async def signup(self, user_instance: AuthSchemas.UserSignupRequest) -> User:
         try:
             username = user_instance.username
             password = user_instance.password
@@ -40,18 +40,23 @@ class AuthRepository(AuthRepositoryInterface):
             await self.db.commit()
             await self.db.refresh(new_user)
             return new_user
+
+        except UserAlreadyExistsException:
+            raise
+
         except Exception as e:
             logger.exception(f"Error creating user: {str(e)}")
             raise BaseAppException(f"Internal database error: {str(e)}") from e
-        
+
     async def login(self, login_data: AuthSchemas.UserLoginRequest) -> str:
         try:
             settings = get_settings()
             user = await get_user_by_username(self.db, login_data.username)
+            print("check user ======== ", user)
             if not user:
                 raise ResourceNotFoundException("Invalid username or password")
 
-            if not pwd_context.verify(login_data.password, user.password_hash):
+            if not pwd_context.verify(login_data.password, str(user.password_hash)):
                 raise ResourceNotFoundException("Invalid username or password")
 
             token_data = {
@@ -63,6 +68,9 @@ class AuthRepository(AuthRepositoryInterface):
 
             token = jwt.encode(token_data, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
             return token
+
+        except ResourceNotFoundException:
+            raise
 
         except Exception as e:
             logger.exception(f"Error during login: {str(e)}")

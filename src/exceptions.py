@@ -14,3 +14,13 @@ class UserAlreadyExistsException(BaseAppException):
     """Raised when trying to create a user that already exists"""
     def __init__(self, message: str):
         super().__init__(message, status_code=400)
+
+class UnauthorizedException(BaseAppException):
+    """Raised when a user is not authorized to perform an action"""
+    def __init__(self, message: str):
+        super().__init__(message, status_code=403)
+
+class UnauthenticatedException(BaseAppException):
+    """Raised when authentication fails"""
+    def __init__(self, message: str):
+        super().__init__(message, status_code=401)

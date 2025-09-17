@@ -18,6 +18,8 @@ class AuthMiddleware(BaseHTTPMiddleware):
         try:
             payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
             request.state.user_id = payload.get("sub")
+            request.state.username = payload.get("username")
+            request.state.role = payload.get("role")
             if request.state.user_id is None:
                 from starlette.responses import JSONResponse
                 return JSONResponse({"detail": "Unauthorized"}, status_code=401)

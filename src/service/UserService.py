@@ -13,12 +13,7 @@ class UserService:
     async def get_user(self, username: str) -> UserSchemas.UserResponse:
         try:
             user = await self.user_repository.get_user(username)
-            return UserSchemas.UserResponse(
-                id=user.id,
-                username=user.username,
-                role=user.role,
-                created_at=user.created_at
-            )
+            return UserSchemas.UserResponse.model_validate(user)
         except ResourceNotFoundException:
             raise #Re-raise from repository layer
         except Exception as e:
@@ -27,7 +22,14 @@ class UserService:
 
     async def create_user(
         self,
-        email: str
+        user_instance: UserSchemas.UserCreateRequest
     ) -> UserSchemas.UserResponse:
+        new_user = await self.user_repository.create_user(user_instance)
+        return UserSchemas.UserResponse.model_validate(new_user)
 
-        pass
+    async def update_user(
+        self,
+        user_instance: UserSchemas.UserUpdateRequest
+    ) -> UserSchemas.UserResponse:
+        updated_user = await self.user_repository.update_user(user_instance)
+        return UserSchemas.UserResponse.model_validate(updated_user)

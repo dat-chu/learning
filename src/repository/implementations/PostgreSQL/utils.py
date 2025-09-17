@@ -1,8 +1,17 @@
-from src.schemas import UserSchemas
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from src.exceptions import BaseAppException
 from src.repository.implementations.PostgreSQL.models.index import User
+from typing import Optional
 
-async def get_user_by_username(db: AsyncSession, username: str) -> UserSchemas.User:
+async def get_user_by_username(db: Optional[AsyncSession], username: str) -> Optional[User]:
+    if db is None:
+        raise BaseAppException("Database session is not initialized")
     result = await db.execute(select(User).where(User.username == username))
-    return result.scalars().first() 
+    return result.scalars().first()
+
+async def get_user_by_id(db: Optional[AsyncSession], user_id: int) -> Optional[User]:
+    if db is None:
+        raise BaseAppException("Database session is not initialized")
+    result = await db.execute(select(User).where(User.id == user_id))
+    return result.scalars().first()
