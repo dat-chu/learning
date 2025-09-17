@@ -44,7 +44,7 @@ class UserRepository(interface_UserRepository.UserRepository):
         if self.db is None:
             raise BaseAppException("Database session is not initialized")
         try:
-            existing_user = await get_user_by_username(self.db, user_instance.username)
+            existing_user = self.get_user(user_instance.username)
             if existing_user:
                 raise UserAlreadyExistsException("User already exists")
 
@@ -62,7 +62,7 @@ class UserRepository(interface_UserRepository.UserRepository):
 
             return new_user
 
-        except UserAlreadyExistsException:
+        except (UserAlreadyExistsException, ResourceNotFoundException):
             raise
 
         except Exception as e:

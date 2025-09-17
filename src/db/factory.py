@@ -3,12 +3,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.repository.interfaces.interface_UserRepository import UserRepository as IUserRepo
 from src.repository.interfaces.interface_AuthRepository import AuthRepository as IAuthRepo
+from src.repository.interfaces.interface_CourseRepository import CourseRepository as ICourseRepo
 from src.repository.implementations.PostgreSQL.postgres_UserRepository import UserRepository as PgUserRepo
 from src.repository.implementations.PostgreSQL.postgres_AuthRepository import AuthRepository as PgAuthRepo
+from src.repository.implementations.PostgreSQL.postgres_CourseRepository import CourseRepository as PgCourseRepo
 from .settings import get_settings, DatabaseType
 
 
-def create_repository(db: AsyncSession, repository_type: str) -> Union[IUserRepo, IAuthRepo]:
+def create_repository(db: AsyncSession, repository_type: str) -> Union[IUserRepo, IAuthRepo, ICourseRepo]:
     """
     Factory method to create repository based on type and DB backend.
     """
@@ -18,6 +20,7 @@ def create_repository(db: AsyncSession, repository_type: str) -> Union[IUserRepo
         repo_map = {
             "user": PgUserRepo,
             "auth": PgAuthRepo,
+            "course": PgCourseRepo,
         }
 
         repo_class = repo_map.get(repository_type)

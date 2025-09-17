@@ -19,3 +19,8 @@ async def get_user(request: Request, username: str, service: UserService = Depen
 @role_required("admin")
 async def create_user(request: Request, user_instance: UserSchemas.UserCreateRequest, service: UserService = Depends(get_user_service)):
     return await service.create_user(user_instance)
+
+@router.put("", status_code=200)
+@role_required("admin")
+async def update_user(request: Request, user_instance: UserSchemas.UserUpdateRequest, service: UserService = Depends(get_user_service)):
+    return await service.update_user(user_instance)

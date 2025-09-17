@@ -14,7 +14,6 @@ class User(BaseModel):
     password_hash: str
     role: UserRole = UserRole.USER
     created_at: datetime
-    model_config = ConfigDict(from_attributes=True)
 
 class UserResponse(BaseModel):
     id: int
@@ -27,7 +26,6 @@ class UserCreateRequest(BaseModel):
     username: str
     password: str
     role: Optional[UserRole] = UserRole.USER
-    model_config = ConfigDict(from_attributes=True)
 
 class UserUpdateRequest(BaseModel):
     username: Optional[str] = None
