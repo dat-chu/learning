@@ -6,6 +6,7 @@ import logging
 from src.logging_config import setup_logging
 from fastapi.responses import JSONResponse
 from src.middleware.correlation_id_middleware import CorrelationIdMiddleware
+from src.middleware.authentication import AuthMiddleware
 from contextlib import asynccontextmanager
 from src.db.settings import get_settings, DatabaseType
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
@@ -55,6 +56,7 @@ app.add_middleware(
 
 # Enable Correlation ID middleware
 app.add_middleware(CorrelationIdMiddleware)
+app.add_middleware(AuthMiddleware)
 
 # Global exception handler
 @app.exception_handler(BaseAppException)

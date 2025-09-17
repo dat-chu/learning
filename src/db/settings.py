@@ -8,6 +8,8 @@ class DatabaseType(str, Enum):
 
 class Settings(BaseSettings):
     DATABASE_TYPE: DatabaseType = DatabaseType.POSTGRES # Default to postgres
+    SECRET_KEY: str = "supersecretkey123"
+    ALGORITHM: str = "HS256"
 
     # --------------------------------------------------------------------
     # Postgres settings

@@ -24,3 +24,11 @@ class AuthService:
         except Exception as e:
             logger.exception(f"Error getting user: {str(e)}")
             raise BaseAppException(f"Error getting user: {str(e)}") from e
+        
+    async def login(self, login_data: AuthSchemas.UserLoginRequest) -> str:
+        try:
+            token = await self.auth_repository.login(login_data)
+            return AuthSchemas.LoginResponse(access_token=token)
+        except Exception as e:
+            logger.exception(f"Error during login: {str(e)}")
+            raise BaseAppException(f"Error during login: {str(e)}") from e

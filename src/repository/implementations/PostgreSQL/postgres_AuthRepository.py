@@ -1,10 +1,13 @@
+from datetime import datetime, timedelta
+import jwt
 from src.repository.implementations.PostgreSQL.utils import get_user_by_username
 from src.repository.interfaces.interface_AuthRepository import AuthRepository as AuthRepositoryInterface
 import logging
-from src.exceptions import BaseAppException, UserAlreadyExistsException
+from src.exceptions import BaseAppException, UserAlreadyExistsException, ResourceNotFoundException
 from src.schemas import AuthSchemas
 from passlib.context import CryptContext
 from src.repository.implementations.PostgreSQL.models.index import User
+from src.db.settings import get_settings
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -40,3 +43,27 @@ class AuthRepository(AuthRepositoryInterface):
         except Exception as e:
             logger.exception(f"Error creating user: {str(e)}")
             raise BaseAppException(f"Internal database error: {str(e)}") from e
+        
+    async def login(self, login_data: AuthSchemas.UserLoginRequest) -> str:
+        try:
+            settings = get_settings()
+            user = await get_user_by_username(self.db, login_data.username)
+            if not user:
+                raise ResourceNotFoundException("Invalid username or password")
+
+            if not pwd_context.verify(login_data.password, user.password_hash):
+                raise ResourceNotFoundException("Invalid username or password")
+
+            token_data = {
+                "sub": str(user.id),
+                "username": user.username,
+                "role": user.role,
+                "exp": datetime.utcnow() + timedelta(hours=12)
+            }
+
+            token = jwt.encode(token_data, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
+            return token
+
+        except Exception as e:
+            logger.exception(f"Error during login: {str(e)}")
+            raise BaseAppException("Internal error during login") from e
