@@ -30,3 +30,7 @@ class CourseService:
 
     async def delete_course(self, course_id: int) -> str:
         return await self.course_repository.delete_course(course_id)
+    
+    async def list_courses(self) -> list[CourseSchemas.CourseResponse]:
+        courses = await self.course_repository.list_courses()
+        return [CourseSchemas.CourseResponse.model_validate(course) for course in courses]

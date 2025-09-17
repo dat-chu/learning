@@ -10,7 +10,6 @@ router = APIRouter(
 )
 
 @router.get("/{course_id}", status_code=200)
-@role_required("admin")
 async def get_course(
     request: Request,
     course_id: int,
@@ -45,3 +44,10 @@ async def delete_course(
     service: CourseService = Depends(get_course_service),
 ):
     return await service.delete_course(course_id)
+
+@router.get("", status_code=200)
+async def list_courses(
+    request: Request,
+    service: CourseService = Depends(get_course_service),
+):
+    return await service.list_courses()

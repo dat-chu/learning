@@ -23,3 +23,8 @@ class CourseRepository(ABC):
     async def delete_course(self, course_id: int) -> str:
         """Delete a course by id"""
         pass
+
+    @abstractmethod
+    async def list_courses(self) -> list[Course]:
+        """List all courses"""
+        pass

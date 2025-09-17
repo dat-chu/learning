@@ -1,4 +1,5 @@
 import logging
+from sqlalchemy import select
 from src.exceptions import BaseAppException, ResourceNotFoundException
 from src.schemas import CourseSchemas
 from src.repository.implementations.PostgreSQL.models.index import Course
@@ -69,3 +70,14 @@ class CourseRepository(CourseRepositoryInterface):
         except Exception as e:
             logger.exception(f"Error deleting course: {str(e)}")
             raise BaseAppException(f"Error deleting course: {str(e)}") from e
+        
+    async def list_courses(self) -> list[Course]:
+        try:
+            result = await self.db.execute(select(Course))
+            courses = result.scalars().all()
+            return courses
+        except Exception as e:
+            logger.exception(f"Error listing courses: {str(e)}")
+            raise BaseAppException(f"Internal database error: {str(e)}") from e
+        
+    
