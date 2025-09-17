@@ -2,7 +2,7 @@
 
 ## 📌 Problem Statement
 
-The system is a **microservice for learning management**, focusing on **user authentication, course management, lessons, and enrollment tracking**.  
+The system is a **microservice for learning management**, focusing on **user authentication, course management, lessons, and enrollment tracking**.
 It supports authentication & authorization with role-based access control (e.g., `admin`, `user`).
 
 ## 🎯 Key Features
@@ -29,3 +29,5 @@ It supports authentication & authorization with role-based access control (e.g.,
   ```bash
   docker compose up --build
   ```
+
+DBDiagram: https://dbdiagram.io/d/learning-68c85c0e1ff9c616bdc954cb
